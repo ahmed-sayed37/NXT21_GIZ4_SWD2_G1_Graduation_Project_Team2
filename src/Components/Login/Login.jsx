@@ -3,11 +3,11 @@ import InputLabel from "../InputLabel";
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
+import { signin } from "../../api/mockApi";
 import { AuthContext } from "../../context/AuthContextStore";
 
 const schema = zod.object({
@@ -39,22 +39,15 @@ export default function Login() {
   });
 
   function handleLogin(data) {
-    return axios
-      .post("https://linked-posts.routemisr.com/users/signin", data)
+    return signin(data)
       .then((res) => {
         toast.success("Successfully logged in");
         insertUserToken(res.data.token);
         setSuccessMsg(true);
-        setTimeout(() => navigate("/home"), 2000);
+        setTimeout(() => navigate("/home"), 1500);
       })
       .catch((err) => {
-        const res = err.response?.data;
-        const msg =
-          res?.error ||
-          res?.message ||
-          res?.errors?.[0]?.msg ||
-          err.message ||
-          "Login failed";
+        const msg = err.response?.data?.error || err.message || "Login failed";
         toast.error(msg);
         setErrorMsg(msg);
         setTimeout(() => setErrorMsg(null), 4000);

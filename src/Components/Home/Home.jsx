@@ -1,24 +1,16 @@
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import PostCard from "../PostCard/PostCard";
 import Loading from "../LoadingScreen/Loading";
 import CreatePost from "../CreatePost/CreatePost";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
-
-function getAllPosts() {
-  return axios.get("https://linked-posts.routemisr.com/posts?limit=20", {
-    headers: {
-      token: localStorage.getItem("tkn"),
-    },
-  });
-}
+import { getPosts } from "../../api/mockApi";
 
 export default function Home() {
   useDocumentTitle("News Feed");
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["getPosts"],
-    queryFn: getAllPosts,
+    queryFn: () => getPosts(20),
   });
 
   if (isLoading) return <Loading />;

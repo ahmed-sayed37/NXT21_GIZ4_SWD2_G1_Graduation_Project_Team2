@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { createPost } from "../../api/mockApi";
 
 export default function CreatePost() {
   const [isModalOpened, setIsModalOpened] = useState(false);
@@ -12,31 +12,20 @@ export default function CreatePost() {
 
   const queryClient = useQueryClient();
 
-  function createPost() {
-    const formData = new FormData();
-    if (captionInput.current.value) {
-      formData.append("body", captionInput.current.value);
-    }
-    if (imageInput.current.value) {
-      formData.append("image", imageInput.current.files[0]);
-    }
-    return axios.post("https://linked-posts.routemisr.com/posts", formData, {
-      headers: {
-        token: localStorage.getItem("tkn"),
-      },
-    });
-  }
-
   const { isPending, mutate } = useMutation({
-    mutationFn: createPost,
+    mutationFn: () =>
+      createPost({
+        body: captionInput.current?.value || "",
+        imageFile: imageInput.current?.files?.[0] || null,
+      }),
     onSuccess: () => {
       toast.success("Post created");
       closeModal();
       queryClient.invalidateQueries({ queryKey: ["getPosts"] });
       queryClient.invalidateQueries({ queryKey: ["getUserPosts"] });
     },
-    onError: () => {
-      toast.error("Failed to create post");
+    onError: (err) => {
+      toast.error(err.response?.data?.error || "Failed to create post");
     },
   });
 

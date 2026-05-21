@@ -3,11 +3,11 @@ import InputLabel from "../InputLabel";
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
+import { signup } from "../../api/mockApi";
 
 const schema = zod
   .object({
@@ -56,21 +56,14 @@ export default function Register() {
   });
 
   function handleRegister(data) {
-    return axios
-      .post("https://linked-posts.routemisr.com/users/signup", data)
+    return signup(data)
       .then(() => {
         toast.success("Account created successfully");
         setSuccessMsg(true);
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/login"), 1500);
       })
       .catch((err) => {
-        const res = err.response?.data;
-        const msg =
-          res?.error ||
-          res?.message ||
-          res?.errors?.[0]?.msg ||
-          err.message ||
-          "Registration failed";
+        const msg = err.response?.data?.error || err.message || "Registration failed";
         toast.error(msg);
         setErrorMsg(msg);
         setTimeout(() => setErrorMsg(null), 4000);

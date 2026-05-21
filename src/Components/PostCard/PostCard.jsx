@@ -1,6 +1,5 @@
 import { useContext, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -12,6 +11,7 @@ import {
 } from "@heroui/react";
 import CommentCard from "../CommentCard/CommentCard";
 import Loading from "../LoadingScreen/Loading";
+import { deletePost as apiDeletePost, addComment as apiAddComment } from "../../api/mockApi";
 import { AuthContext } from "../../context/AuthContextStore";
 
 const STATIC_USER_IMAGE =
@@ -29,28 +29,21 @@ export default function PostCard({ post, isInSinglePage = false }) {
   );
 
   const { mutate: deletePost } = useMutation({
-    mutationFn: () =>
-      axios.delete(`https://linked-posts.routemisr.com/posts/${post.id}`, {
-        headers: { token: localStorage.getItem("tkn") },
-      }),
+    mutationFn: () => apiDeletePost(post.id),
     onSuccess: () => {
       toast.success("Post deleted");
       queryClient.invalidateQueries({ queryKey: ["getPosts"] });
       queryClient.invalidateQueries({ queryKey: ["getUserPosts"] });
     },
-    onError: () => toast.error("Failed to delete post"),
+    onError: (err) => toast.error(err.response?.data?.error || "Failed to delete post"),
   });
 
   const { mutate: addComment, isPending } = useMutation({
-    mutationFn: () =>
-      axios.post(
-        "https://linked-posts.routemisr.com/comments",
-        { content: comment, post: post.id },
-        { headers: { token: localStorage.getItem("tkn") } }
-      ),
+    mutationFn: () => apiAddComment({ content: comment, postId: post.id }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getSinglePost", post.id] });
       queryClient.invalidateQueries({ queryKey: ["getPosts"] });
+      queryClient.invalidateQueries({ queryKey: ["getUserPosts"] });
     },
     onSettled: () => setComment(""),
   });
