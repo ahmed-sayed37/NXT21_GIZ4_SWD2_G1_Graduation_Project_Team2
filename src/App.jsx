@@ -10,59 +10,64 @@ import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import GuestRoute from "./Components/GuestRoute/GuestRoute";
 import AuthContextProvider from "./context/AuthContext";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { index: true, element: <Navigate to="/home" replace /> },
-      {
-        path: "login",
-        element: (
-          <GuestRoute>
-            <Login />
-          </GuestRoute>
-        ),
-      },
-      {
-        path: "register",
-        element: (
-          <GuestRoute>
-            <Register />
-          </GuestRoute>
-        ),
-      },
-      {
-        path: "home",
-        element: (
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "profile",
-        element: (
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "postDetails/:id",
-        element: (
-          <ProtectedRoute>
-            <PostDetails />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "*",
-        element: <div className="text-center text-4xl py-20">404 - Page Not Found</div>,
-      },
-    ],
-  },
-]);
+const basename = import.meta.env.BASE_URL.replace(/\/$/, "") || "/";
+
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Layout />,
+      children: [
+        { index: true, element: <Navigate to="/home" replace /> },
+        {
+          path: "login",
+          element: (
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          ),
+        },
+        {
+          path: "register",
+          element: (
+            <GuestRoute>
+              <Register />
+            </GuestRoute>
+          ),
+        },
+        {
+          path: "home",
+          element: (
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "profile",
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "postDetails/:id",
+          element: (
+            <ProtectedRoute>
+              <PostDetails />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "*",
+          element: <div className="text-center text-4xl py-20">404 - Page Not Found</div>,
+        },
+      ],
+    },
+  ],
+  { basename }
+);
 
 const queryClient = new QueryClient();
 
