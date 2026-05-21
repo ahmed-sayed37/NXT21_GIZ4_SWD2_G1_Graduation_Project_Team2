@@ -48,10 +48,16 @@ export default function Login() {
         setTimeout(() => navigate("/home"), 2000);
       })
       .catch((err) => {
-        const msg = err.response?.data?.error || "Login failed";
+        const res = err.response?.data;
+        const msg =
+          res?.error ||
+          res?.message ||
+          res?.errors?.[0]?.msg ||
+          err.message ||
+          "Login failed";
         toast.error(msg);
         setErrorMsg(msg);
-        setTimeout(() => setErrorMsg(null), 2000);
+        setTimeout(() => setErrorMsg(null), 4000);
       });
   }
 

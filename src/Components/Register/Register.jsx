@@ -23,7 +23,10 @@ const schema = zod
         "Password must contain uppercase, lowercase, number and special character (min 8 chars)"
       ),
     rePassword: zod.string(),
-    dateOfBirth: zod.coerce.date({ message: "Please enter a valid date" }),
+    dateOfBirth: zod
+      .string()
+      .min(1, "Please enter your date of birth")
+      .refine((d) => !Number.isNaN(Date.parse(d)), "Please enter a valid date"),
     gender: zod.enum(["male", "female"], { message: "Please select a gender" }),
   })
   .refine((val) => val.password === val.rePassword, {
@@ -61,10 +64,16 @@ export default function Register() {
         setTimeout(() => navigate("/login"), 2000);
       })
       .catch((err) => {
-        const msg = err.response?.data?.error || "Registration failed";
+        const res = err.response?.data;
+        const msg =
+          res?.error ||
+          res?.message ||
+          res?.errors?.[0]?.msg ||
+          err.message ||
+          "Registration failed";
         toast.error(msg);
         setErrorMsg(msg);
-        setTimeout(() => setErrorMsg(null), 2000);
+        setTimeout(() => setErrorMsg(null), 4000);
       });
   }
 
