@@ -1,6 +1,16 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
 @plugin "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
 @import "flowbite/src/themes/default";
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
+
+html {
+  background-color: #f8fafc;
+}
+html.dark {
+  background-color: #0f172a;
+  color-scheme: dark;
+}

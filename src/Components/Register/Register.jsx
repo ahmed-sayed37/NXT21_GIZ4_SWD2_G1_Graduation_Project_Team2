@@ -3,9 +3,9 @@ import InputLabel from "../InputLabel";
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { signup } from "../../api/mockApi";
 
@@ -38,8 +38,6 @@ export default function Register() {
   useDocumentTitle("Register");
 
   const navigate = useNavigate();
-
-  const [successMsg, setSuccessMsg] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
 
   const { handleSubmit, register, formState } = useForm({
@@ -59,8 +57,7 @@ export default function Register() {
     return signup(data)
       .then(() => {
         toast.success("Account created successfully");
-        setSuccessMsg(true);
-        setTimeout(() => navigate("/login"), 1500);
+        navigate("/login");
       })
       .catch((err) => {
         const msg = err.response?.data?.error || err.message || "Registration failed";
@@ -71,125 +68,114 @@ export default function Register() {
   }
 
   return (
-    <>
-      <Toaster />
+    <div className="flex justify-center">
+      <div className="w-full md:w-1/2 shadow-2xl bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 md:rounded-3xl p-4">
+        <h1 className="text-4xl md:text-6xl text-center font-bold text-white">
+          Register
+        </h1>
 
-      <div className="flex justify-center">
-        <div className="md:w-1/2 shadow-2xl bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 md:rounded-3xl p-4">
-          <h1 className="text-4xl md:text-6xl text-center font-bold animate-pulse duration-700">
-            Register Page
-          </h1>
+        <form
+          onSubmit={handleSubmit(handleRegister)}
+          className="px-6 md:px-20 py-5 text-gray-200"
+        >
+          <InputLabel
+            register={register}
+            info="name"
+            content="User Name"
+            id="userName"
+            type="text"
+            placeholder="Your Name"
+          />
+          {formState.errors.name && (
+            <p className="text-red-300 text-sm">{formState.errors.name.message}</p>
+          )}
 
-          <form
-            onSubmit={handleSubmit(handleRegister)}
-            className="px-20 py-5 text-gray-200"
+          <InputLabel
+            register={register}
+            info="email"
+            content="Email"
+            id="email"
+            type="email"
+            placeholder="Your Email"
+          />
+          {formState.errors.email && (
+            <p className="text-red-300 text-sm">{formState.errors.email.message}</p>
+          )}
+
+          <InputLabel
+            register={register}
+            info="password"
+            content="Password"
+            id="password"
+            type="password"
+            placeholder="Your Password"
+          />
+          {formState.errors.password && (
+            <p className="text-red-300 text-sm">{formState.errors.password.message}</p>
+          )}
+
+          <InputLabel
+            register={register}
+            info="rePassword"
+            content="Confirm Password"
+            id="rePassword"
+            type="password"
+            placeholder="Confirm Your Password"
+          />
+          {formState.errors.rePassword && (
+            <p className="text-red-300 text-sm">{formState.errors.rePassword.message}</p>
+          )}
+
+          <InputLabel
+            register={register}
+            info="dateOfBirth"
+            content="Date of Birth"
+            id="dateOfBirth"
+            type="date"
+            placeholder="Your Date of Birth"
+          />
+          {formState.errors.dateOfBirth && (
+            <p className="text-red-300 text-sm">
+              {formState.errors.dateOfBirth.message}
+            </p>
+          )}
+
+          <div className="flex items-center gap-6 mb-3 mt-2">
+            <label className="inline-flex items-center gap-2">
+              <input {...register("gender")} value="male" type="radio" />
+              <span>Male</span>
+            </label>
+            <label className="inline-flex items-center gap-2">
+              <input {...register("gender")} value="female" type="radio" />
+              <span>Female</span>
+            </label>
+          </div>
+          {formState.errors.gender && (
+            <p className="text-red-300 text-sm">{formState.errors.gender.message}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={formState.isSubmitting}
+            className="border-0 py-2 w-full rounded-2xl cursor-pointer bg-violet-500 text-white text-xl mt-2 hover:bg-violet-700 transition disabled:opacity-60"
           >
-            <InputLabel
-              register={register}
-              info="name"
-              content="User Name"
-              id="userName"
-              type="text"
-              placeholder="Your Name"
-            />
-            {formState.errors.name && formState.touchedFields.name && (
-              <p className="text-red-700">{formState.errors.name.message}</p>
-            )}
+            {formState.isSubmitting ? <ClipLoader size={22} color="#fff" /> : "Sign up"}
+          </button>
 
-            <InputLabel
-              register={register}
-              info="email"
-              content="Email"
-              id="email"
-              type="email"
-              placeholder="Your Email"
-            />
-            {formState.errors.email && formState.touchedFields.email && (
-              <p className="text-red-700">{formState.errors.email.message}</p>
-            )}
+          {errorMsg && (
+            <p className="py-1.5 w-full text-center bg-red-500/80 rounded-2xl my-3">
+              {errorMsg}
+            </p>
+          )}
 
-            <InputLabel
-              register={register}
-              info="password"
-              content="Password"
-              id="password"
-              type="password"
-              placeholder="Your Password"
-            />
-            {formState.errors.password && formState.touchedFields.password && (
-              <p className="text-red-700">{formState.errors.password.message}</p>
-            )}
-
-            <InputLabel
-              register={register}
-              info="rePassword"
-              content="Confirm Password"
-              id="rePassword"
-              type="password"
-              placeholder="Confirm Your Password"
-            />
-            {formState.errors.rePassword && formState.touchedFields.rePassword && (
-              <p className="text-red-700">{formState.errors.rePassword.message}</p>
-            )}
-
-            <InputLabel
-              register={register}
-              info="dateOfBirth"
-              content="Date of Birth"
-              id="dateOfBirth"
-              type="date"
-              placeholder="Your Date of Birth"
-            />
-            {formState.errors.dateOfBirth && formState.touchedFields.dateOfBirth && (
-              <p className="text-red-700">{formState.errors.dateOfBirth.message}</p>
-            )}
-
-            <div className="mb-3 flex items-end">
-              <label htmlFor="male">Male</label>
-              <input
-                {...register("gender")}
-                value="male"
-                id="male"
-                type="radio"
-                className="ms-2"
-              />
-            </div>
-
-            <div className="mb-3 flex items-end">
-              <label htmlFor="female">Female</label>
-              <input
-                {...register("gender")}
-                value="female"
-                id="female"
-                type="radio"
-                className="ms-2"
-              />
-            </div>
-            {formState.errors.gender && (
-              <p className="text-red-700">{formState.errors.gender.message}</p>
-            )}
-
-            <button
-              type="submit"
-              disabled={formState.isSubmitting}
-              className="border-0 py-2 w-full rounded-2xl cursor-pointer bg-violet-500 text-white text-2xl hover:bg-violet-800 duration-500 disabled:opacity-60"
-            >
-              {formState.isSubmitting ? <ClipLoader size={24} color="#fff" /> : "Sign up"}
-            </button>
-
-            {successMsg && (
-              <p className="py-1.5 w-full text-center bg-green-500 rounded-2xl my-3">
-                Successfully
-              </p>
-            )}
-            {errorMsg && (
-              <p className="py-1.5 w-full text-center bg-red-500 rounded-2xl my-3">
-                {errorMsg}
-              </p>
-            )}
-          </form>
-        </div>
+          <p className="text-center mt-4 text-sm">
+            Have an account?{" "}
+            <Link to="/login" className="text-violet-200 hover:underline">
+              Login
+            </Link>
+          </p>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
