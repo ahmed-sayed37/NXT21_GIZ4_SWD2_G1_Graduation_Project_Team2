@@ -263,7 +263,7 @@ function seedDb() {
     posts: [
       {
         id: "post_welcome",
-        body: "Welcome to the Social App! Like, comment, add friends, and find people in your area.",
+        body: "Welcome to Social Connect! Like, comment, add friends, and find people in your area.",
         image: null,
         createdAt: new Date(now - 1000 * 60 * 60 * 24).toISOString(),
         user: pickPublicUser(asser),

@@ -80,7 +80,7 @@ export default function PostCard({ post, isInSinglePage = false }) {
 
   async function handleShare() {
     const shareData = {
-      title: `${post.user.name} on Social App`,
+      title: `${post.user.name} on Social Connect`,
       text: post.body.slice(0, 140),
       url: postUrl,
     };
