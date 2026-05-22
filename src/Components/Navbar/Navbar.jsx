@@ -35,9 +35,20 @@ export default function Navbar() {
   return (
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3 gap-3">
-        <Link to="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-semibold whitespace-nowrap bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            Social App
+        <Link to="/" className="flex items-center gap-2 shrink-0" aria-label="Social Connect home">
+          <span
+            className="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 text-white shadow-md"
+            aria-hidden="true"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="7" cy="8" r="3" />
+              <circle cx="17" cy="8" r="3" />
+              <circle cx="12" cy="17" r="3" />
+              <path d="M9.5 9.5l2.5 4.5M14.5 9.5L12 14M10 8h4" />
+            </svg>
+          </span>
+          <span className="text-xl sm:text-2xl font-bold whitespace-nowrap bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            Social Connect
           </span>
         </Link>
 

@@ -1,6 +1,6 @@
 # How to Build & Run
 
-DEPI Graduation Project — Team 2 · Social App.
+DEPI Graduation Project — Team 2 · Social Connect.
 
 A React 19 + Vite single-page app. The backend is **fully mocked in the browser via `localStorage`** — no server, no database, no API keys. Just `npm install` and go.
 
