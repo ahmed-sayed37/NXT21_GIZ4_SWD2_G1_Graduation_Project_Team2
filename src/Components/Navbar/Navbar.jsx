@@ -37,7 +37,7 @@ export default function Navbar() {
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-3 gap-3">
         <Link to="/" className="flex items-center space-x-2">
           <span className="text-2xl font-semibold whitespace-nowrap bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            Social app
+            Social App
           </span>
         </Link>
 
