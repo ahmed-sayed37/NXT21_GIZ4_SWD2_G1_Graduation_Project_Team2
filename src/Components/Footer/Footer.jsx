@@ -1,13 +1,9 @@
-import React from "react";
-
 export default function Footer() {
-  return  <>
-  
-    <div className="dark:bg-gray-900 p-3">
-        <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 Omar Khaled All Rights Reserved.</span>
-      </div>
-  
-  
-  </>
-  
+  return (
+    <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 p-4">
+      <span className="block text-sm text-center text-gray-500 dark:text-gray-400">
+        © {new Date().getFullYear()} Social App · DEPI Graduation Project — Team 2
+      </span>
+    </footer>
+  );
 }

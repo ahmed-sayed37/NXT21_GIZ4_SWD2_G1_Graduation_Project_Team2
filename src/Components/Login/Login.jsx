@@ -3,9 +3,9 @@ import InputLabel from "../InputLabel";
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 import { signin } from "../../api/mockApi";
 import { AuthContext } from "../../context/AuthContextStore";
@@ -26,14 +26,10 @@ export default function Login() {
   const navigate = useNavigate();
   const { insertUserToken } = useContext(AuthContext);
 
-  const [successMsg, setSuccessMsg] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
 
   const { handleSubmit, register, formState } = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
     mode: "onChange",
     resolver: zodResolver(schema),
   });
@@ -43,8 +39,7 @@ export default function Login() {
       .then((res) => {
         toast.success("Successfully logged in");
         insertUserToken(res.data.token);
-        setSuccessMsg(true);
-        setTimeout(() => navigate("/home"), 1500);
+        navigate("/home");
       })
       .catch((err) => {
         const msg = err.response?.data?.error || err.message || "Login failed";
@@ -55,65 +50,60 @@ export default function Login() {
   }
 
   return (
-    <>
-      <Toaster />
-      <div className="md:p-19 min-h-screen dark:text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-        <div className="flex justify-center">
-          <div className="md:w-1/2 shadow-2xl bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 md:rounded-3xl p-4">
-            <h1 className="text-4xl md:text-6xl text-center font-bold animate-pulse duration-700">
-              Login Page
-            </h1>
+    <div className="flex justify-center">
+      <div className="w-full md:w-1/2 shadow-2xl bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 md:rounded-3xl p-4">
+        <h1 className="text-4xl md:text-6xl text-center font-bold text-white">Login</h1>
 
-            <form
-              onSubmit={handleSubmit(handleLogin)}
-              className="px-20 py-5 text-gray-200"
-            >
-              <InputLabel
-                register={register}
-                info="email"
-                content="Email"
-                id="email"
-                type="email"
-                placeholder="Your Email"
-              />
-              {formState.errors.email && formState.touchedFields.email && (
-                <p className="text-red-700">{formState.errors.email.message}</p>
-              )}
+        <form
+          onSubmit={handleSubmit(handleLogin)}
+          className="px-6 md:px-20 py-5 text-gray-200"
+        >
+          <InputLabel
+            register={register}
+            info="email"
+            content="Email"
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+          />
+          {formState.errors.email && (
+            <p className="text-red-300 text-sm">{formState.errors.email.message}</p>
+          )}
 
-              <InputLabel
-                register={register}
-                info="password"
-                content="Password"
-                id="password"
-                type="password"
-                placeholder="Your Password"
-              />
-              {formState.errors.password && formState.touchedFields.password && (
-                <p className="text-red-700">{formState.errors.password.message}</p>
-              )}
+          <InputLabel
+            register={register}
+            info="password"
+            content="Password"
+            id="password"
+            type="password"
+            placeholder="Your Password"
+          />
+          {formState.errors.password && (
+            <p className="text-red-300 text-sm">{formState.errors.password.message}</p>
+          )}
 
-              <button
-                type="submit"
-                disabled={formState.isSubmitting}
-                className="border-0 py-2 w-full rounded-2xl cursor-pointer bg-violet-500 text-white text-2xl hover:bg-violet-800 duration-500 disabled:opacity-60"
-              >
-                {formState.isSubmitting ? <ClipLoader size={24} color="#fff" /> : "Login"}
-              </button>
+          <button
+            type="submit"
+            disabled={formState.isSubmitting}
+            className="border-0 py-2 w-full rounded-2xl cursor-pointer bg-violet-500 text-white text-xl mt-4 hover:bg-violet-700 transition disabled:opacity-60"
+          >
+            {formState.isSubmitting ? <ClipLoader size={22} color="#fff" /> : "Login"}
+          </button>
 
-              {successMsg && (
-                <p className="py-1.5 w-full text-center bg-green-500 rounded-2xl my-3">
-                  Successfully
-                </p>
-              )}
-              {errorMsg && (
-                <p className="py-1.5 w-full text-center bg-red-500 rounded-2xl my-3">
-                  {errorMsg}
-                </p>
-              )}
-            </form>
-          </div>
-        </div>
+          {errorMsg && (
+            <p className="py-1.5 w-full text-center bg-red-500/80 rounded-2xl my-3">
+              {errorMsg}
+            </p>
+          )}
+
+          <p className="text-center mt-4 text-sm">
+            No account?{" "}
+            <Link to="/register" className="text-violet-200 hover:underline">
+              Register
+            </Link>
+          </p>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
